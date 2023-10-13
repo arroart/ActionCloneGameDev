@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 3584986874867259983}
   - component: {fileID: 3584986874867260016}
   - component: {fileID: 3584986874867260017}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Player (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -109,6 +109,8 @@ MonoBehaviour:
   launch: 0
   playerNum: 0
   spawnY: -11.5
+  alive: 1
+  layerNo: 0
 --- !u!50 &3584986874867260016
 Rigidbody2D:
   serializedVersion: 4

@@ -36,6 +36,10 @@ public class playerFollow : MonoBehaviour
             player1Pos = player1.transform.position;
         }
         Vector3 newPos = new Vector3(0f, (player1Pos.y + playerPos.y) / 2, 0f);
-        transform.position = newPos;
+        if(newPos.y>=-5.5f && newPos.y <= 14f)
+        {
+            transform.position = newPos;
+        }
+       
     }
 }

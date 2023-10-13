@@ -16,7 +16,7 @@ public class GameManager : MonoBehaviour
 
    
 
-    List<GameObject> allClouds = new List<GameObject>();
+    public List<GameObject> allClouds = new List<GameObject>();
 
     private void Start()
     {

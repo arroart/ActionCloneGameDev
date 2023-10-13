@@ -1,12 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class ActionPlayer : MonoBehaviour
 {
     public KeyCode leftKey;
     public KeyCode rightKey;
 
+    public int score = 0;
     public float xAccel;
     public float gravity;
     public float bounceVel;
@@ -27,10 +29,18 @@ public class ActionPlayer : MonoBehaviour
 
     public bool alive = true;
 
+    public int layerNo=6;
+
+    public GameObject otherPlayer;
+
+
+    public TextMeshProUGUI scoreDisplay;
+
     private void Start()
-    { 
+    {
+        scoreDisplay.text = score.ToString();
         myBody = GetComponent<Rigidbody2D>();
-        Respawn();
+        Invoke("Respawn", 2);
     }
 
     private void Update()
@@ -57,16 +67,16 @@ public class ActionPlayer : MonoBehaviour
 
             if (myBody.velocity.y > 0)
             {
-                gameObject.GetComponent<Collider2D>().isTrigger = true;
+                Physics2D.IgnoreLayerCollision(layerNo, 7);
             }
             else
             {
-                gameObject.GetComponent<Collider2D>().isTrigger = false;
+                Physics2D.IgnoreLayerCollision(layerNo, 7,false);
             }
         }
         else
         {
-            gameObject.GetComponent<Collider2D>().isTrigger = true;
+            Physics2D.IgnoreLayerCollision(layerNo, 7);
         }
     }
 
@@ -103,27 +113,56 @@ public class ActionPlayer : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if(collision.gameObject.tag == "Cloud")
+        if (collision.gameObject.tag == "Cloud")
         {
             bounce = true;
+            gm.allClouds.Remove(collision.gameObject);
             Destroy(collision.transform.parent.gameObject);
         }
+        //if (collision.gameObject == otherPlayer && otherPlayer.GetComponent<Rigidbody2D>().velocity.y < 0 && myBody.velocity.y < 0 && transform.position.y > otherPlayer.transform.position.y)
+        //{
+        //    score++;
+        //    scoreDisplay.text = score.ToString();
+        //    otherPlayer.GetComponent<ActionPlayer>().alive = false;
+        //    otherPlayer.GetComponent<SpriteRenderer>().flipY = true;
+        //}
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.name == "Death" && myBody.velocity.y<0)
         {
-            Invoke("Respawn", 5);
+            if (alive == true)
+            {
+                score--;
+                scoreDisplay.text = score.ToString();
+            }
+            Debug.Log("hi");
+            alive = false;
+            Invoke("Respawn", 2);
         }
+
     }
 
     void Respawn()
     {
         alive = true;
+        GetComponent<SpriteRenderer>().flipY = false;
         float spawnX = Random.Range(-9f, 9f);
         transform.position = new Vector3(spawnX, spawnY, 0f);
         launch = true;
       
     }
+
+    public void hitPlayer(GameObject collision)
+    {
+        if (collision.gameObject == otherPlayer && otherPlayer.GetComponent<Rigidbody2D>().velocity.y < 0 && myBody.velocity.y < 0 && transform.position.y > otherPlayer.transform.position.y)
+        {
+            score++;
+            scoreDisplay.text = score.ToString();
+            otherPlayer.GetComponent<ActionPlayer>().alive = false;
+            otherPlayer.GetComponent<SpriteRenderer>().flipY = true;
+        }
+    }
+
 }
